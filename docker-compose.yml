@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    container_name: db
+    networks:
+      - mynetwork
+    environment:
+      POSTGRES_USER: wiki
+      POSTGRES_PASSWORD: wiki
+      POSTGRES_DB: wiki
+    restart: unless-stopped
+
+  wiki:
+    image: ghcr.io/requarks/wiki:2
+    container_name: wiki
+    networks:
+      - mynetwork
+    ports:
+      - "80:3000"
+      - "443:3443"
+    environment:
+      LETSENCRYPT_DOMAIN: "wiki.mids.capital"
+      LETSENCRYPT_EMAIL: "Your mail!!!!!!!!!!!!!!!!!!!!!!111"
+      SSL_ACTIVE: "1"
+      DB_TYPE: "postgres"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USER: "wiki"
+      DB_PASS: "wiki"
+      DB_NAME: "wiki"
+    restart: unless-stopped
+
+networks:
+  mynetwork:
+    driver: bridge
